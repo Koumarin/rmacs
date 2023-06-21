@@ -25,7 +25,7 @@ with_curses do |stdscr|
 
   File.open(filename, 'r+') do |file|
     file.each do |line|
-      break if stdscr.cury >= stdscr.maxy or stdscr.curx != 0
+      break if stdscr.cury >= stdscr.maxy - 1 or stdscr.curx != 0
 
       stdscr.addstr line
     end
