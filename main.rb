@@ -21,6 +21,8 @@ end
 filename = ARGV.first
 
 with_curses do |stdscr|
+  Curses.curs_set 2                     # Make cursor visible.
+
   File.open(filename, 'r+') do |file|
     file.each do |line|
       break if stdscr.cury >= stdscr.maxy or stdscr.curx != 0
