@@ -15,6 +15,12 @@ class Buffer
     end
   end
 
+  def insert(c)
+    @lines[@y][@x] = c
+    @lines[@y] += "\n" if @x == @lines[@y].size - 1
+    @x += 1
+  end
+
   def move(x: 0, y: 0)
     @y  = (@y + y).clamp 0, @lines.size - 1
     @x += x
@@ -83,8 +89,6 @@ with_curses do |stdscr|
     c = stdscr.getch
 
     case
-    when c == 'q'
-      break
     when c == Curses::Key::LEFT
       buffer.move x: -1
     when c == Curses::Key::RIGHT
@@ -93,6 +97,8 @@ with_curses do |stdscr|
       buffer.move y: -1
     when c == Curses::Key::DOWN
       buffer.move y: 1
+    else
+      buffer.insert c
     end
   end
 end
