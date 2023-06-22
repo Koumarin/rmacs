@@ -19,10 +19,15 @@ class Buffer
     @y  = (@y + y).clamp 0, @lines.size - 1
     @x += x
 
-    ## Keep current column if we only moved to a new line.
-    if x != 0 and @x >= @lines[@y].size
-      @y = (@y + 1).clamp 0, @lines.size
-      @x = 0
+    if x != 0
+      case
+      when @x >= @lines[@y].size
+        @y = (@y + 1).clamp 0, @lines.size - 1
+        @x = 0
+      when @x < 0
+        @y = (@y - 1).clamp 0, @lines.size - 1
+        @x = @lines[@y].size - 1
+      end
     end
   end
 
