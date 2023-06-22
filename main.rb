@@ -19,7 +19,8 @@ class Buffer
     @y  = wrap(@y + y, 0, @lines.size)
     @x += x
 
-    if @x >= @lines[@y].size
+    ## Keep current column if we only moved to a new line.
+    if x != 0 and @x >= @lines[@y].size
       @y = wrap(@y + 1, 0, @lines.size)
       @x = 0
     end
@@ -34,7 +35,8 @@ class Buffer
       to.addstr line
     end
 
-    to.setpos wrap(@y, 0, to.maxy), @x
+    to.setpos wrap(@y, 0, to.maxy),
+              wrap(@x, 0, @lines[@y].size)
   end
 
   private
