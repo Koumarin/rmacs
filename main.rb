@@ -40,8 +40,8 @@ class Buffer
       to.addstr line
     end
 
-    to.setpos (@y - off).clamp(0, to.maxy),
-              (@x - off).clamp(0, @lines[@y].size - 1)
+    to.setpos @y.clamp(0, to.maxy),
+              @x.clamp(0, @lines[@y].size - 1)
   end
 end
 
