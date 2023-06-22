@@ -16,7 +16,7 @@ class Buffer
   end
 
   def move(x: 0, y: 0)
-    @y  = (@y + y).clamp 0, @lines.size
+    @y  = (@y + y).clamp 0, @lines.size - 1
     @x += x
 
     ## Keep current column if we only moved to a new line.
@@ -35,8 +35,8 @@ class Buffer
       to.addstr line
     end
 
-    to.setpos @y.clamp(0, to.maxy),
-              @x.clamp(0, @lines[@y].size)
+    to.setpos (@y - off).clamp(0, to.maxy),
+              (@x - off).clamp(0, @lines[@y].size - 1)
   end
 end
 
