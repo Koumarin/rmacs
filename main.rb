@@ -3,20 +3,38 @@ require 'optparse'
 
 require 'curses'
 
-class Cursor
-  def initialize(scr)
-    @scr = scr
-    @x   = 0
-    @y   = 0
+class Buffer
+  def initialize(path:)
+    @file  = File.open(path, 'r+')
+    @lines = []
+    @y     = 0
+    @x     = 0
+
+    @file.each do |line|
+      @lines.push line
+    end
   end
 
-  def update
-    @scr.setpos @y, @x
+  def move(x: 0, y: 0)
+    @y  = wrap(@y + y, 0, @lines.size)
+    @x += x
+
+    if @x >= @lines[@y].size
+      @y = wrap(@y + 1, 0, @lines.size)
+      @x = 0
+    end
   end
 
-  def move(y: 0, x: 0)
-    @y = wrap(@y + y, 0, @scr.maxy)
-    @x = wrap(@x + x, 0, @scr.maxx)
+  def draw(to:)
+    to.setpos 0, 0
+
+    @lines.each_with_index do |line, idx|
+      break if idx >= to.maxy
+
+      to.addstr line
+    end
+
+    to.setpos wrap(@y, 0, to.maxy), @x
   end
 
   private
@@ -50,37 +68,29 @@ end
 filename = ARGV.first
 
 with_curses do |stdscr|
-  cursor = Cursor.new(stdscr)
+  buffer = Buffer.new path: filename
 
   Curses.curs_set 2                     # Make cursor visible.
   Curses.cbreak                         # Disable input buffering.
   Curses.noecho                         # Disable input echoing.
   stdscr.keypad true                    # Enable terminal keypad.
 
-  File.open(filename, 'r+') do |file|
-    file.each do |line|
-      break if stdscr.cury >= stdscr.maxy - 1 or stdscr.curx != 0
+  loop do
+    buffer.draw to: stdscr
 
-      stdscr.addstr line
-    end
+    c = stdscr.getch
 
-    while true
-      cursor.update
-
-      c = stdscr.getch
-
-      case
-      when c == 'q'
-        break
-      when c == Curses::Key::LEFT
-        cursor.move x: -1
-      when c == Curses::Key::RIGHT
-        cursor.move x: 1
-      when c == Curses::Key::UP
-        cursor.move y: -1
-      when c == Curses::Key::DOWN
-        cursor.move y: 1
-      end
+    case
+    when c == 'q'
+      break
+    when c == Curses::Key::LEFT
+      buffer.move x: -1
+    when c == Curses::Key::RIGHT
+      buffer.move x: 1
+    when c == Curses::Key::UP
+      buffer.move y: -1
+    when c == Curses::Key::DOWN
+      buffer.move y: 1
     end
   end
 end
