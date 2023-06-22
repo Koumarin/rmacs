@@ -32,15 +32,22 @@ class Buffer
   end
 
   def draw(to:)
+    ## We want to scroll the buffer until the current cursor is in the screen.
+    off  = 0
+    off += to.maxy while @y - off >= to.maxy
+    stop = to.maxy + off
+
     to.setpos 0, 0
+    to.clear
 
     @lines.each_with_index do |line, idx|
-      break if idx >= to.maxy
+      next  if idx <  off
+      break if idx >= stop
 
       to.addstr line
     end
 
-    to.setpos @y.clamp(0, to.maxy),
+    to.setpos (@y - off).clamp(0, to.maxy),
               @x.clamp(0, @lines[@y].size - 1)
   end
 end
