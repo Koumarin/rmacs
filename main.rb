@@ -38,7 +38,7 @@ class Buffer
     stop = to.maxy + off
 
     to.setpos 0, 0
-    to.clear
+    to.erase
 
     @lines.each_with_index do |line, idx|
       next  if idx <  off
