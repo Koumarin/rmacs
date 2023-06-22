@@ -16,12 +16,12 @@ class Buffer
   end
 
   def move(x: 0, y: 0)
-    @y  = wrap(@y + y, 0, @lines.size)
+    @y  = (@y + y).clamp 0, @lines.size
     @x += x
 
     ## Keep current column if we only moved to a new line.
     if x != 0 and @x >= @lines[@y].size
-      @y = wrap(@y + 1, 0, @lines.size)
+      @y = (@y + 1).clamp 0, @lines.size
       @x = 0
     end
   end
@@ -35,20 +35,8 @@ class Buffer
       to.addstr line
     end
 
-    to.setpos wrap(@y, 0, to.maxy),
-              wrap(@x, 0, @lines[@y].size)
-  end
-
-  private
-  def wrap(n, min, max)
-    case
-    when n < min
-      min
-    when n >= max - 1
-      max - 1
-    else
-      n
-    end
+    to.setpos @y.clamp(0, to.maxy),
+              @x.clamp(0, @lines[@y].size)
   end
 end
 
