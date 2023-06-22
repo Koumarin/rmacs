@@ -23,6 +23,15 @@ class Buffer
     @x += 1
   end
 
+  def split_line
+    new_line   = @lines[@y][@x..@lines[@y].size]
+
+    @lines[@y] = @lines[@y][0, @x] + "\n"
+    @lines.insert @y + 1, new_line
+
+    move x: -@x, y: 1
+  end
+
   def move(x: 0, y: 0)
     @y  = (@y + y).clamp 0, @lines.size - 1
     @x += x
@@ -99,6 +108,8 @@ with_curses do |stdscr|
       buffer.move y: -1
     when c == Curses::Key::DOWN
       buffer.move y: 1
+    when c == 10
+      buffer.split_line
     else
       buffer.insert c
     end
