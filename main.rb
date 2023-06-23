@@ -99,16 +99,16 @@ with_curses do |stdscr|
 
     c = stdscr.getch
 
-    case
-    when c == Curses::Key::LEFT
+    case c
+    when Curses::Key::LEFT
       buffer.move x: -1
-    when c == Curses::Key::RIGHT
+    when Curses::Key::RIGHT
       buffer.move x: 1
-    when c == Curses::Key::UP
+    when Curses::Key::UP
       buffer.move y: -1
-    when c == Curses::Key::DOWN
+    when Curses::Key::DOWN
       buffer.move y: 1
-    when c == 10
+    when 10
       buffer.split_line
     else
       buffer.insert c
