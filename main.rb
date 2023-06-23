@@ -32,6 +32,15 @@ class Buffer
     move x: -@x, y: 1
   end
 
+  def delete(offset: 0)
+    if @x + offset >= @lines[@y].size - 1
+      # TODO remove newline
+    else
+      @lines[@y].slice! @x + offset
+      @x += offset
+    end
+  end
+
   def move(x: 0, y: 0)
     @y  = (@y + y).clamp 0, @lines.size - 1
     @x += x
@@ -110,6 +119,10 @@ with_curses do |stdscr|
       buffer.move y: 1
     when 10
       buffer.split_line
+    when Curses::Key::BACKSPACE
+      buffer.delete offset: -1
+    when 330                            # Delete
+      buffer.delete
     else
       buffer.insert c
     end
