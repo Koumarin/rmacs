@@ -13,6 +13,11 @@ class Buffer
     @file.each do |line|
       @lines.push line
     end
+
+    ## Add an empty line to empty documents.
+    if @lines.size == 0
+      @lines.push ' '
+    end
   end
 
   def insert(c)
