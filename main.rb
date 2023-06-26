@@ -29,7 +29,7 @@ class Buffer
   end
 
   def split_line
-    new_line   = @lines[@y][@x..@lines[@y].size]
+    new_line = @lines[@y][@x..@lines[@y].size]
 
     @lines[@y] = @lines[@y][0, @x] + "\n"
     @lines.insert @y + 1, new_line
