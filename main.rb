@@ -38,12 +38,12 @@ class Buffer
   end
 
   def delete(offset: 0)
-    x = @x + offset
+    move x: offset
 
-    @lines[@y].slice! x
-    @x += offset
+    @lines[@y].slice! @x
 
-    if x >= @lines[@y].size - 1
+    ## If we deleted the end of line, we remove the new line.
+    if @x >= @lines[@y].size - 1
       @lines[@y] += @lines[@y + 1]
       @lines.delete_at @y + 1
     end
