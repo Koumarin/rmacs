@@ -36,9 +36,7 @@ class Buffer
     move x: -@x, y: 1
   end
 
-  def delete(offset: 0)
-    move x: offset
-
+  def delete
     @lines[@y].slice! @x
 
     ## If we deleted the end of line, we remove the new line.
@@ -127,7 +125,8 @@ with_curses do |stdscr|
     when 10
       buffer.split_line
     when Curses::Key::BACKSPACE
-      buffer.delete offset: -1
+      buffer.move x: -1
+      buffer.delete
     when 330                            # Delete
       buffer.delete
     else
