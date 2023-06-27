@@ -53,6 +53,16 @@ class Buffer
     end
   end
 
+  def save
+    @file.truncate 0                    # Delete all file content,
+    @file.rewind                        # rewind to prevent writing null bytes
+    @lines.each do |line|               # and then write each line from
+      @file.write line                  # the buffer to the file.
+    end
+
+    @file.flush
+  end
+
   def move(x: 0, y: 0)
     @y  = (@y + y).clamp 0, @lines.size - 1
     @x += x
@@ -139,6 +149,8 @@ with_curses do |stdscr|
     ## Control characters:
     when 3                              # C-c
       break
+    when 19                             # C-s
+      buffer.save
     else
       buffer.insert c
     end
