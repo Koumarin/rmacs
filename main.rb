@@ -36,6 +36,13 @@ class Buffer
     move x: -@x, y: 1
   end
 
+  def backspace
+    unless @y == 0 and @x == 0
+      move x: -1
+      delete
+    end
+  end
+
   def delete
     @lines[@y].slice! @x
 
@@ -125,8 +132,7 @@ with_curses do |stdscr|
     when 10
       buffer.split_line
     when Curses::Key::BACKSPACE
-      buffer.move x: -1
-      buffer.delete
+      buffer.backspace
     when 330                            # Delete
       buffer.delete
     else
