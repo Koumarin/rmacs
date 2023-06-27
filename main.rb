@@ -133,7 +133,7 @@ with_curses do |stdscr|
       buffer.split_line
     when Curses::Key::BACKSPACE
       buffer.backspace
-    when 330                            # Delete
+    when Curses::Key::DC                # Delete character.
       buffer.delete
     else
       buffer.insert c
