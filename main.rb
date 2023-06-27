@@ -7,8 +7,7 @@ class Buffer
   def initialize(path:)
     @file  = File.open(path, 'r+')
     @lines = []
-    @y     = 0
-    @x     = 0
+    @y, @x = 0, 0
 
     @file.each do |line|
       @lines.push line
