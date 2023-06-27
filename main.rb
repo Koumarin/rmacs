@@ -113,6 +113,7 @@ with_curses do |stdscr|
   Curses.curs_set 2                     # Make cursor visible.
   Curses.cbreak                         # Disable input buffering.
   Curses.noecho                         # Disable input echoing.
+  Curses.raw                            # Don't generate signals on ctrl chars.
   stdscr.keypad true                    # Enable terminal keypad.
 
   loop do
@@ -135,6 +136,9 @@ with_curses do |stdscr|
       buffer.backspace
     when Curses::Key::DC                # Delete character.
       buffer.delete
+    ## Control characters:
+    when 3                              # C-c
+      break
     else
       buffer.insert c
     end
