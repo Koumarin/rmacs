@@ -23,8 +23,7 @@ class Buffer
   def insert(c)
     x = @x.clamp 0, @lines[@y].size - 1
 
-    @lines[@y][x] = c
-    @lines[@y] += "\n" if @x == @lines[@y].size - 1
+    @lines[@y].insert x, c
     @x += 1
   end
 
