@@ -72,11 +72,16 @@ class Window
     @buffer.save
   end
 
+  ### Queries
   def height
     @curses_window.maxy
   end
 
   def width
     @curses_window.maxx
+  end
+
+  def position
+    [@y, @x]
   end
 end
