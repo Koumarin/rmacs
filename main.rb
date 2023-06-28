@@ -17,6 +17,7 @@ class ModeLine
   def draw
     y, x = @active_window.position
     @curses_window.erase
+    @curses_window.addstr @active_window.dirty? ? '** ' : '-- '
     @curses_window.addstr @active_window.path + ' '
     @curses_window.addstr "(#{y + 1},#{x})"
     @curses_window.refresh

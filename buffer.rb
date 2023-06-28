@@ -2,6 +2,7 @@ class Buffer
   def initialize(path:)
     @file  = File.open(path, 'r+')
     @lines = []
+    @dirty = false
 
     @file.each do |line|
       @lines.push line
@@ -17,6 +18,7 @@ class Buffer
     x = x.clamp 0, (line_size y) - 1
 
     @lines[y].insert x, c
+    @dirty = true
   end
 
   def split_line(x:, y:)
@@ -24,6 +26,7 @@ class Buffer
 
     @lines[y] = @lines[y][0, x] + "\n"
     @lines.insert y + 1, new_line
+    @dirty = true
   end
 
   def delete(x:, y:)
@@ -34,6 +37,8 @@ class Buffer
       @lines[y] += @lines[y + 1]
       @lines.delete_at y + 1
     end
+
+    @dirty = true
   end
 
   def save
@@ -44,6 +49,7 @@ class Buffer
     end
 
     @file.flush
+    @dirty = false
   end
 
   def each_with_index
@@ -63,5 +69,9 @@ class Buffer
 
   def path
     @file.path
+  end
+
+  def dirty?
+    @dirty
   end
 end

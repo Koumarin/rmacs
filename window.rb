@@ -88,4 +88,8 @@ class Window
   def path
     @buffer.path
   end
+
+  def dirty?
+    @buffer.dirty?
+  end
 end
