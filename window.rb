@@ -14,8 +14,12 @@ class Window
     if x != 0
       case
       when @x >= (@buffer.line_size @y)
-        @y = (@y + 1).clamp 0, @buffer.bottom
-        @x = 0
+        if @y == @buffer.bottom
+          @x = (@buffer.line_size @y) - 1
+        else
+          @y = (@y + 1).clamp 0, @buffer.bottom
+          @x = 0
+        end
       when @x < 0
         @y = (@y - 1).clamp 0, @buffer.bottom
         @x = (@buffer.line_size @y) - 1
