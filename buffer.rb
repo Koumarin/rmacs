@@ -52,11 +52,16 @@ class Buffer
     end
   end
 
+  ### Queries
   def bottom
     @lines.size - 1
   end
 
   def line_size(y)
     @lines[y].size
+  end
+
+  def path
+    @file.path
   end
 end

@@ -84,4 +84,8 @@ class Window
   def position
     [@y, @x]
   end
+
+  def path
+    @buffer.path
+  end
 end
