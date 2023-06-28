@@ -6,24 +6,6 @@ require 'curses'
 require_relative 'buffer'
 require_relative 'window'
 
-class ModeLine
-  attr_writer :active_window
-
-  def initialize(screen:)
-    ##                             h     width           y          x
-    @curses_window = screen.subwin 1, screen.maxx, screen.maxy - 1, 0
-  end
-
-  def draw
-    y, x = @active_window.position
-    @curses_window.erase
-    @curses_window.addstr @active_window.dirty? ? '** ' : '-- '
-    @curses_window.addstr @active_window.path + ' '
-    @curses_window.addstr "(#{y + 1},#{x})"
-    @curses_window.refresh
-  end
-end
-
 def with_curses
   yield Curses.stdscr
 ensure
@@ -44,9 +26,6 @@ filename = ARGV.first
 with_curses do |stdscr|
   window = Window.new screen: stdscr,
                       buffer: (Buffer.new path: filename)
-  line = ModeLine.new screen: stdscr
-
-  line.active_window = window
 
   Curses.curs_set 2                     # Make cursor visible.
   Curses.cbreak                         # Disable input buffering.
@@ -55,7 +34,6 @@ with_curses do |stdscr|
   stdscr.keypad true                    # Enable terminal keypad.
 
   loop do
-    line.draw
     window.draw
 
     c = stdscr.getch

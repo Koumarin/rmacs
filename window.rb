@@ -2,6 +2,7 @@ class Window
   def initialize(screen:, buffer:)
     ##                                 height          width     y  x
     @curses_window = screen.subwin screen.maxy - 1, screen.maxx, 0, 0
+    @mode_line     = ModeLine.new parent: @curses_window, window: self
     @buffer        = buffer
     @y, @x         = 0, 0
   end
@@ -62,6 +63,8 @@ class Window
       @curses_window.addstr line
     end
 
+    @mode_line.draw
+
     @curses_window.setpos (@y - off).clamp(0, height),
                           @x.clamp(0, (@buffer.line_size @y) - 1)
 
@@ -74,7 +77,7 @@ class Window
 
   ### Queries
   def height
-    @curses_window.maxy
+    @curses_window.maxy - 1
   end
 
   def width
@@ -91,5 +94,22 @@ class Window
 
   def dirty?
     @buffer.dirty?
+  end
+end
+
+class ModeLine
+  def initialize(parent:, window:)
+    ##                             h     width           y          x
+    @curses_window = parent.subwin 1, parent.maxx, parent.maxy - 1, 0
+    @window        = window
+  end
+
+  def draw
+    y, x = @window.position
+    @curses_window.erase
+    @curses_window.addstr @window.dirty? ? '** ' : '-- '
+    @curses_window.addstr @window.path + ' '
+    @curses_window.addstr "(#{y + 1},#{x})"
+    @curses_window.refresh
   end
 end
