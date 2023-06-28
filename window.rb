@@ -8,21 +8,25 @@ class Window
   end
 
   def move(x: 0, y: 0)
-    @y  = (@y + y).clamp 0, @buffer.bottom
-    @x += x
+    if y > 0 and @y == @buffer.bottom
+      @x = (@buffer.line_size @y) - 1
+    else
+      @y  = (@y + y).clamp 0, @buffer.bottom
+      @x += x
 
-    if x != 0
-      case
-      when @x >= (@buffer.line_size @y)
-        if @y == @buffer.bottom
+      if x != 0
+        case
+        when @x >= (@buffer.line_size @y)
+          if @y == @buffer.bottom
+            @x = (@buffer.line_size @y) - 1
+          else
+            @y = (@y + 1).clamp 0, @buffer.bottom
+            @x = 0
+          end
+        when @x < 0
+          @y = (@y - 1).clamp 0, @buffer.bottom
           @x = (@buffer.line_size @y) - 1
-        else
-          @y = (@y + 1).clamp 0, @buffer.bottom
-          @x = 0
         end
-      when @x < 0
-        @y = (@y - 1).clamp 0, @buffer.bottom
-        @x = (@buffer.line_size @y) - 1
       end
     end
   end
