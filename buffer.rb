@@ -3,6 +3,7 @@ class Buffer
     @file  = File.open(path, 'r+')
     @lines = []
     @dirty = false
+    @path  = File.absolute_path @file.path
 
     @file.each do |line|
       @lines.push line
@@ -67,8 +68,12 @@ class Buffer
     @lines[y].size
   end
 
-  def path
+  def name
     @file.path
+  end
+
+  def path
+    @path
   end
 
   def dirty?

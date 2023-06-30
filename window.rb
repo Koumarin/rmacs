@@ -1,4 +1,8 @@
+require 'wisper'
+
 class Window
+  include Wisper::Publisher
+
   def initialize(screen:, buffer:)
     ##                                 height          width     y  x
     @curses_window = screen.subwin screen.maxy - 1, screen.maxx, 0, 0
@@ -80,7 +84,12 @@ class Window
   end
 
   def save
-    @buffer.save
+    if dirty?
+      @buffer.save
+      broadcast(:log_to_minibuffer, "Wrote #{path}")
+    else
+      broadcast(:log_to_minibuffer, '(No changes to be saved)')
+    end
   end
 
   ### Queries
@@ -94,6 +103,10 @@ class Window
 
   def position
     [@y, @x]
+  end
+
+  def name
+    @buffer.name
   end
 
   def path
@@ -116,7 +129,7 @@ class ModeLine
     y, x = @window.position
     @curses_window.erase
     @curses_window.addstr @window.dirty? ? '** ' : '-- '
-    @curses_window.addstr @window.path + ' '
+    @curses_window.addstr @window.name + ' '
     @curses_window.addstr "(#{y + 1},#{x})"
     @curses_window.refresh
   end

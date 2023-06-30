@@ -4,6 +4,7 @@ require 'optparse'
 require 'curses'
 
 require_relative 'buffer'
+require_relative 'mini_buffer'
 require_relative 'window'
 
 def with_curses
@@ -26,6 +27,9 @@ filename = ARGV.first
 with_curses do |stdscr|
   window = Window.new screen: stdscr,
                       buffer: (Buffer.new path: filename)
+  mini = MiniBuffer.new screen: stdscr
+
+  window.subscribe mini
 
   Curses.curs_set 2                     # Make cursor visible.
   Curses.cbreak                         # Disable input buffering.
@@ -37,6 +41,8 @@ with_curses do |stdscr|
     window.draw
 
     c = stdscr.getch
+
+    mini.clear
 
     case c
     when Curses::Key::LEFT
