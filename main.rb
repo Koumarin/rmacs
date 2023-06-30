@@ -62,6 +62,8 @@ with_curses do |stdscr|
       break
     when 19                             # C-s
       window.save
+    when 6                              # C-f
+      window.prompt_open
     else
       window.insert c
     end

@@ -100,6 +100,14 @@ class Window
     end
   end
 
+  def prompt_open
+    broadcast(:prompt_open_file, self)
+  end
+
+  def open_file(path)
+    @buffer = Buffer.new path: path
+  end
+
   ### Queries
   def height
     @curses_window.maxy - 1
