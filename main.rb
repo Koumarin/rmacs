@@ -29,8 +29,6 @@ with_curses do |stdscr|
                       buffer: (Buffer.new path: filename)
   mini = MiniBuffer.new screen: stdscr
 
-  window.subscribe mini
-
   Curses.curs_set 2                     # Make cursor visible.
   Curses.cbreak                         # Disable input buffering.
   Curses.noecho                         # Disable input echoing.

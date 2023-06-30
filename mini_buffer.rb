@@ -1,6 +1,10 @@
+require 'wisper'
+
 class MiniBuffer
   def initialize(screen:)
     @curses_window = screen.subwin 1, screen.maxx, screen.maxy - 1, 0
+
+    Wisper.subscribe self
   end
 
   def clear
