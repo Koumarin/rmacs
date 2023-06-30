@@ -1,0 +1,11 @@
+* Features
+** TODO Add key chords.
+** TODO Add multiple buffers.
+** TODO Add buffer switching to windows (C-b).
+*** TODO Add a list of buffers where they can be looked up.
+*** TODO Add buffer opening (C-f).
+** TODO Add buffer killing (C-k).
+** TODO Add prompt before exiting when file is dirty.
+
+* Fixes
+** TODO Fix crash when trying to insert non-print character. (use ctype.h?)
