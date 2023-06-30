@@ -12,8 +12,11 @@ class Window
   end
 
   def move(x: 0, y: 0)
-    if y > 0 and @y == @buffer.bottom
+    case
+    when (y > 0 and @y == @buffer.bottom)
       @x = (@buffer.line_size @y) - 1
+    when (y < 0 and @y == 0)
+      @x = 0
     else
       @y  = (@y + y).clamp 0, @buffer.bottom
       @x += x
