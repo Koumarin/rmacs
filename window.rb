@@ -40,7 +40,12 @@ class Window
 
   def insert(c)
     @buffer.insert c, x: @x, y: @y
-    move x: 1
+
+    if @x >= (@buffer.line_size @y)
+      @x = (@buffer.line_size @y) - 1
+    else
+      move x: 1
+    end
   end
 
   def split_line
