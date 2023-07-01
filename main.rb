@@ -1,6 +1,7 @@
 #!/bin/env ruby
 require 'optparse'
 
+require 'ctype'
 require 'curses'
 
 require_relative 'buffer'
@@ -42,30 +43,32 @@ with_curses do |stdscr|
 
     mini.clear
 
-    case c
-    when Curses::Key::LEFT
+    case
+    when c ==  Curses::Key::LEFT
       window.move x: -1
-    when Curses::Key::RIGHT
+    when c == Curses::Key::RIGHT
       window.move x: 1
-    when Curses::Key::UP
+    when c == Curses::Key::UP
       window.move y: -1
-    when Curses::Key::DOWN
+    when c == Curses::Key::DOWN
       window.move y: 1
-    when 10
+    when c == 10
       window.split_line
-    when Curses::Key::BACKSPACE
+    when c == Curses::Key::BACKSPACE
       window.backspace
-    when Curses::Key::DC                # Delete character.
+    when c == Curses::Key::DC           # Delete character.
       window.delete
     ## Control characters:
-    when 3                              # C-c
+    when c == 3                         # C-c
       break
-    when 19                             # C-s
+    when c == 19                        # C-s
       window.save
-    when 6                              # C-f
+    when c == 6                         # C-f
       window.prompt_open
-    else
+    when c.print?
       window.insert c
+    else
+      raise "#{c}"
     end
   end
 end
