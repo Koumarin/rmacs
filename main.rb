@@ -65,6 +65,8 @@ with_curses do |stdscr|
       window.save
     when c == 6                         # C-f
       window.prompt_open
+    when c == 26                        # C-z
+      Process.kill :TSTP, Process.pid
     when c.print?
       window.insert c
     else
