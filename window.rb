@@ -1,3 +1,4 @@
+require 'curses'
 require 'wisper'
 
 class Window
@@ -101,7 +102,7 @@ class Window
   end
 
   def prompt_open
-    broadcast(:prompt_open_file, self)
+    broadcast(:prompt_in_minibuffer, self, 'Find file: ', :open_file)
   end
 
   def open_file(path)

@@ -20,12 +20,12 @@ class MiniBuffer
     @curses_window.refresh
   end
 
-  def prompt_open_file(window)
+  def prompt_in_minibuffer(window, prompt, method)
     Curses.echo
 
-    @curses_window.addstr 'Find file: '
-    path = @curses_window.getstr
-    window.open_file path
+    @curses_window.addstr prompt
+    response = @curses_window.getstr
+    window.send method, response
 
     @curses_window.erase
     @curses_window.refresh
