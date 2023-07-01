@@ -14,6 +14,14 @@ ensure
   Curses.close_screen
 end
 
+def ctrl_key c
+ if c.is_a? String
+   c.codepoints[0] & 0x1f
+ else
+   c & 0x1f
+ end
+end
+
 OptionParser.new do |parser|
   parser.banner = 'Usage: rmacs [file]'
 end.parse!
@@ -52,20 +60,20 @@ with_curses do |stdscr|
       window.move y: -1
     when c == Curses::Key::DOWN
       window.move y: 1
-    when c == 10
+    when c == (ctrl_key 'j')
       window.split_line
     when c == Curses::Key::BACKSPACE
       window.backspace
     when c == Curses::Key::DC           # Delete character.
       window.delete
     ## Control characters:
-    when c == 3                         # C-c
+    when c == (ctrl_key 'c')
       break
-    when c == 19                        # C-s
+    when c == (ctrl_key 's')
       window.save
-    when c == 6                         # C-f
+    when c == (ctrl_key 'f')
       window.prompt_open
-    when c == 26                        # C-z
+    when c == (ctrl_key 'z')
       Process.kill :TSTP, Process.pid
     when c.print?
       window.insert c
