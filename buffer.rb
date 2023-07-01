@@ -31,7 +31,9 @@ class Buffer
   end
 
   def delete(x:, y:)
-    @lines[y].slice! x
+    if x < (line_size y)
+      @lines[y].slice! x
+    end
 
     ## If we deleted the end of line, we remove the new line.
     if x >= (line_size y) - 1
